@@ -1,95 +1,161 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+'use client';
+
+import { useLayoutEffect } from 'react';
+import gsap from 'gsap';
+import ScrollTrigger from 'gsap/dist/ScrollTrigger';
+import Flip from 'gsap/dist/Flip';
 
 export default function Home() {
+  gsap.registerPlugin(ScrollTrigger);
+  gsap.registerPlugin(Flip);
+
+  useLayoutEffect(() => {
+    let ctx = gsap.context(() => {
+      const gallery = document.querySelector('#gallery-2');
+
+      // Select elements within the gallery that will be animated
+      const galleryItems = gallery.querySelectorAll('.gallery__item');
+
+      const galleryItemsInner = [...galleryItems]
+        .map((item) => (item.children.length > 0 ? [...item.children] : []))
+        .flat();
+
+      gallery.classList.add('gallery--switch');
+
+      const flipstate = Flip.getState([galleryItems]);
+
+      gallery.classList.remove('gallery--switch');
+      // Remove the final class to revert to the initial state
+
+      //Create the Flip animation timeline
+      const tl = Flip.to(flipstate, {
+        ease: 'none',
+        absoluteOnLeave: false,
+        absolute: false,
+        scale: true,
+        simple: true,
+        scrollTrigger: {
+          trigger: '#gallery-2',
+          scrollTrigger: {
+            start: 'center center',
+            end: '+=300%',
+          },
+          pin: '#selected-image',
+          scrub: true,
+          markers: true,
+          anticipatePin: true,
+        },
+
+        stagger: 0,
+      });
+
+      // If there are inner elements in the gallery items, animate them too
+      if (galleryItemsInner.length) {
+        gsap
+          .timeline({
+            scrollTrigger: {
+              trigger: '#gallery-2',
+              start: 'center center',
+              end: '',
+              scrub: true,
+            },
+          })
+          .fromTo(
+            galleryItemsInner,
+            {
+              scale: 2,
+            },
+            {
+              scale: 1,
+            },
+            0
+          );
+      }
+    });
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div className="app-wrapper">
+      <div
+        className="gallery-wrap gallery-wrap--large pyramid-animation"
+        id="selected-image"
+      >
+        <div className="gallery gallery--grid gallery--breakout" id="gallery-2">
+          <div className="gallery__item gallery__item-cut">
+            <div
+              className="gallery__item-inner"
+              style={{
+                backgroundImage: `url(https://tympanus.net/Development/ScrollBasedLayoutAnimations/img/12.jpg)`,
+              }}
+            ></div>
+          </div>
+          <div className="gallery__item gallery__item-cut">
+            <div
+              className="gallery__item-inner"
+              style={{
+                backgroundImage: `url(https://tympanus.net/Development/ScrollBasedLayoutAnimations/img/12.jpg)`,
+              }}
+            ></div>
+          </div>
+          <div className="gallery__item gallery__item-cut">
+            <div
+              className="gallery__item-inner"
+              style={{
+                backgroundImage: `url(https://tympanus.net/Development/ScrollBasedLayoutAnimations/img/12.jpg)`,
+              }}
+            ></div>
+          </div>
+          <div className="gallery__item gallery__item-cut">
+            <div
+              className="gallery__item-inner"
+              style={{
+                backgroundImage: `url(https://tympanus.net/Development/ScrollBasedLayoutAnimations/img/12.jpg)`,
+              }}
+            ></div>
+          </div>
+          <div className="gallery__item gallery__item-cut">
+            <div
+              className="gallery__item-inner"
+              style={{
+                backgroundImage: `url(https://tympanus.net/Development/ScrollBasedLayoutAnimations/img/12.jpg)`,
+              }}
+            ></div>
+          </div>
+          <div className="gallery__item gallery__item-cut">
+            <div
+              className="gallery__item-inner"
+              style={{
+                backgroundImage: `url(https://tympanus.net/Development/ScrollBasedLayoutAnimations/img/12.jpg)`,
+              }}
+            ></div>
+          </div>
+          <div className="gallery__item gallery__item-cut">
+            <div
+              className="gallery__item-inner"
+              style={{
+                backgroundImage: `url(https://tympanus.net/Development/ScrollBasedLayoutAnimations/img/12.jpg)`,
+              }}
+            ></div>
+          </div>
+          <div className="gallery__item gallery__item-cut">
+            <div
+              className="gallery__item-inner"
+              style={{
+                backgroundImage: `url(https://tympanus.net/Development/ScrollBasedLayoutAnimations/img/12.jpg)`,
+              }}
+            ></div>
+          </div>
+          <div className="gallery__item gallery__item-cut">
+            <div
+              className="gallery__item-inner"
+              style={{
+                backgroundImage: `url(https://tympanus.net/Development/ScrollBasedLayoutAnimations/img/12.jpg)`,
+              }}
+            ></div>
+          </div>
         </div>
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </div>
+  );
 }
